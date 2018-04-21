@@ -42,8 +42,9 @@
         <tr>
             <th> <a href="{{ args["data_path"] + file }}">{{ file }}</a> </th>
             <th>
-                <form method="get" action="{{ args["data_path"] + file }}">
-                <input type="submit" value="Скачать файл"/>
+                <form method="post" action="/graphic/">
+                    <input type="hidden" name="filename" value="{{ file }}"/>
+                    <input type="submit" value="Построить график"/>
                 </form>
             </th>
         </tr>
@@ -81,8 +82,9 @@
                 <tr>
                     <th> <a href="{{ args["data_path"] + file }}">{{ file }}</a> </th>
                     <th>
-                        <form method="get" action="{{ args["data_path"] + file }}">
-                        <input type="submit" value="Скачать файл"/>
+                        <form method="post" action="/graphic/">
+                            <input type="hidden" name="filename" value="{{ file }}"/>
+                            <input type="submit" value="Построить график"/>
                         </form>
                     </th>
                 </tr>
