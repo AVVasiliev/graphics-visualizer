@@ -59,8 +59,8 @@
     <div class="row">
     <div class="col-xs-2 col-md-1"></div>
     <div class="col-xs-6 col-md-8">
-    {% if args["too_big"] %}
-        <h2>Слишком большой файл (> 1МБ)</h2>
+    {% if args["big"] %}
+        <h2>Слишком большой файл (> 20МБ)</h2>
         Текущий размер файла: {{ args["size"] }}МБ
         <form method="get">
             <input type="submit" value="Вернуться на страницу загрузки файла" />

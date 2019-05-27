@@ -1,4 +1,4 @@
-from graphics_app import app, URL_DARASETS, URL_IMAGES
+from graphics_app import app, URL_DARASETS, URL_IMAGES, MAX_FILE_SIZE
 from flask import abort
 
 import uuid
@@ -7,11 +7,6 @@ from flask import request
 from werkzeug.utils import secure_filename
 import os
 from graphics_app.graphics import create_3d_graphic, COLORMAP
-
-
-@app.route('/index/')
-def index():
-    return "Initial Flask"
 
 
 @app.route("/", methods=["POST", "GET"])
@@ -24,12 +19,10 @@ def load_file():
             filename = str(uuid.uuid4()) + '_' + secure_filename(file.filename)
             file.seek(0, os.SEEK_END)
             args["size"] = round(file.tell()/(2**20), 2)
-            args["too_big"] = False
             args["method"] = "POST"
             args["data_name"] = ""
-            if file.tell() > 1024*1024:
-                # 1 MB limit
-                args["too_big"] = True
+            if file.tell() > MAX_FILE_SIZE:
+                args["big"] = True
                 return render_template("file_download.html", args=args)
             file.seek(0, 0)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
