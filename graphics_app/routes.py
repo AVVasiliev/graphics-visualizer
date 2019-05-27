@@ -58,5 +58,5 @@ def construct_graphic():
         args["image_path"] = URL_IMAGES + '/png/'
         args["table"] = table_min
 
-    return render_template("graphic_plotter.html", args=args)
+    return render_template("plotter.html", args=args)
 
