@@ -33,7 +33,7 @@ def load_file():
     for filename in os.listdir(app.config['UPLOAD_FOLDER']):
         list_files.append(filename)
     args["files"] = list_files
-    return render_template("file_download.html", args=args)
+    return render_template("index.html", args=args)
 
 
 @app.route("/graphic/", methods=["POST", "GET"])
@@ -55,7 +55,7 @@ def construct_graphic():
                                                    colormap=COLORMAP[colormap])
         args["method"] = "GET"
         args["image"] = image_name
-        args["image_path"] = URL_IMAGES
+        args["image_path"] = URL_IMAGES + '/png/'
         args["table"] = table_min
 
     return render_template("graphic_plotter.html", args=args)

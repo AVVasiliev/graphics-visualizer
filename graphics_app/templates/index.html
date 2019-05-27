@@ -1,0 +1,84 @@
+{% extends "core.html" %}
+
+{% block js_scripts %}
+    <script src="{{ url_for('static', filename='js/on_click_eventer.js') }}"></script>
+{% endblock %}
+
+{% block content_body %}
+   {% if args["method"] == "GET" %}
+    <div class="row">
+    <div class="col-xs-2 col-md-1"></div>
+    <div class="col-xs-6 col-md-8">
+	<h1>Конструктор графиков</h1>
+	<form action="/downloads/" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit">Загрузить</button>
+    </form>
+    <br>
+    <h2>История</h2>
+    <table class="table">
+    <thead>
+      <tr>
+        <th>График</th>
+        <th>Файл</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for file in args["files"] %}
+        <tr>
+            <th> <a href="{{ args["data_path"] + file }}">{{ file }}</a> </th>
+            <th>
+                <form method="post" action="/graphic/">
+                    <input type="hidden" name="filename" value="{{ file }}"/>
+                    <input type="submit" value="Построить график"/>
+                </form>
+            </th>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    </div>
+    </div>
+{% endif %}
+
+    {% if args["method"] == "POST" %}
+        <div class="row">
+        <div class="col-xs-2 col-md-1"></div>
+        <div class="col-xs-6 col-md-8">
+        {% if args["big"] %}
+            <h2>Слишком большой файл (> 20МБ)</h2>
+            Текущий размер файла: {{ args["size"] }}МБ
+            <form method="get">
+                <input type="submit" value="Вернуться на страницу загрузки файла" />
+            </form>
+    {% else %}
+        <h2>Файл успешно загружен</h2>
+        Имя файла: {{ args["data_name"] }} <br>
+        Размер файла: {{ args["size"] }}МБ <br>
+        <h2>История</h2>
+        <table class="table">
+        <thead>
+          <tr>
+            <th>График</th>
+            <th>Файл</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for file in args["files"] %}
+                <tr>
+                    <th> <a href="{{ args["data_path"] + file }}">{{ file }}</a> </th>
+                    <th>
+                        <form method="post" action="/graphic/">
+                            <input type="hidden" name="filename" value="{{ file }}"/>
+                            <input type="submit" value="Построить график"/>
+                        </form>
+                    </th>
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    {% endif %}
+    </div>
+    </div>
+    {% endif %}
+{% endblock %}

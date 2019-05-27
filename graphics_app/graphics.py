@@ -32,7 +32,12 @@ def create_3d_graphic(filename, colormap=cm.hot):
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     ax.plot_trisurf(x, y, z, cmap=colormap)
-    image_name = '{}.png'.format(str(uuid.uuid4()))
-    image_path = os.path.join(IMAGES_FOLDER, image_name)
-    plt.savefig(image_path)
-    return image_name, image_path
+    file_id = str(uuid.uuid4())
+    image_path_png = os.path.join(IMAGES_FOLDER, 'png', '{}.png'.format(file_id))
+    image_path_pdf = os.path.join(IMAGES_FOLDER, 'pdf', '{}.pdf'.format(file_id))
+    image_path_eps = os.path.join(IMAGES_FOLDER, 'eps', '{}.eps'.format(file_id))
+    plt.savefig(image_path_png)
+    plt.savefig(image_path_eps, format='eps', dpi=1000)
+    plt.savefig(image_path_pdf, format='pdf', dpi=1000)
+
+    return '{}.png'.format(file_id), image_path_png
