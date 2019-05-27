@@ -46,7 +46,7 @@
             <tr>
                 <th> <a href="{{ args["data_path"] + file }}">{{ file }}</a> </th>
                 <th>
-                    <form method="post" action="/graphic/">
+                    <form method="get" action="/graphic/">
                         <input type="hidden" name="filename" value="{{ file }}"/>
                         <input type="submit" value="Построить график"/>
                     </form>
