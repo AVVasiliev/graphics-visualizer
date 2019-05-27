@@ -18,11 +18,13 @@
     <title>{{ page_title }}</title>
   </head>
   <body>
-    <nav class="navbar fixed-top navbar-light", style="background-color: #FFFF00">
-         <a class="navbar-brand" href="{{ url_for('load_file') }}">GraphicBuilder</a>
-    </nav>
+        <nav class="navbar fixed-top navbar-light", style="background-color: #FFFF00;">
+            <a class="navbar-brand" href="{{ url_for('load_file') }}"><h1>Конструктор графиков</h1></a>
+        </nav>
+
     {% block content_body %}
     {% endblock %}
+
 
   </body>
 </html>
