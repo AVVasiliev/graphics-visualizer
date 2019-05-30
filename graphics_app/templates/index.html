@@ -1,0 +1,62 @@
+{% extends "core.html" %}
+
+{% block js_scripts %}
+    <script src="{{ url_for('static', filename='js/on_click_eventer.js') }}"></script>
+{% endblock %}
+
+{% block content_body %}
+    <div class="row"  style="padding-top: 100px; padding-left: 5%; padding-right: 5%">
+    <div class="col-md-4" style="border-right: 2px solid;">
+        <h2 align="center">Загрузка файла с данными</h2>
+        <form action="/downloads/" method="POST" enctype="multipart/form-data">
+            <div align="center">
+            <input type="file" name="file" class="btn btn-upload">
+            </div>
+                <br>
+            <div align="center">
+                <button type="submit" class="btn btn-primary">Загрузить</button>
+            </div>
+        </form>
+
+        {% if args["method"] == "POST" %}
+        <hr>
+        {% if args["big"] %}
+            <h2>Слишком большой файл (> 20МБ)</h2>
+            <b>Текущий размер файла: {{ args["size"] }}МБ</b>
+    {% else %}
+        <h2>Файл успешно загружен</h2>
+            <b>Имя файла:</b> <br>
+            {{ args["data_name"] }} <br>
+        <b>Размер файла: </b> {{ args["size"] }}МБ <br>
+    {% endif %}
+    {% endif %}
+    </div>
+     <div class="col-md-8">
+        <h2 align="center">История</h2>
+
+        <table class="table">
+        <thead>
+          <tr>
+            <th>График</th>
+            <th>Файл</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for file in args["files"] %}
+            <tr>
+                <th> <a href="{{ args["data_path"] + file }}">{{ file }}</a> </th>
+                <th>
+                    <form method="get" action="/graphic/">
+                        <input type="hidden" name="filename" value="{{ file }}"/>
+                        <input type="submit" value="Построить график"/>
+                    </form>
+                </th>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+     </div>
+    </div>
+
+
+{% endblock %}

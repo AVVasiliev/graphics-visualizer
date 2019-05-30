@@ -1,4 +1,4 @@
-from graphics_app import app, URL_DARASETS, URL_IMAGES
+from graphics_app import app, URL_DARASETS, URL_IMAGES, MAX_FILE_SIZE
 from flask import abort
 
 import uuid
@@ -6,12 +6,7 @@ from flask import render_template
 from flask import request
 from werkzeug.utils import secure_filename
 import os
-from graphics_app.graphics import create_3d_graphic, COLORMAP
-
-
-@app.route('/index/')
-def index():
-    return "Initial Flask"
+from graphics_app.graphics import create_3d_graphic, COLORMAP, PICT_TYPES, create_2d_graphic, RESOLUTION
 
 
 @app.route("/", methods=["POST", "GET"])
@@ -24,12 +19,10 @@ def load_file():
             filename = str(uuid.uuid4()) + '_' + secure_filename(file.filename)
             file.seek(0, os.SEEK_END)
             args["size"] = round(file.tell()/(2**20), 2)
-            args["too_big"] = False
             args["method"] = "POST"
             args["data_name"] = ""
-            if file.tell() > 1024*1024:
-                # 1 MB limit
-                args["too_big"] = True
+            if file.tell() > MAX_FILE_SIZE:
+                args["big"] = True
                 return render_template("file_download.html", args=args)
             file.seek(0, 0)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -40,30 +33,52 @@ def load_file():
     for filename in os.listdir(app.config['UPLOAD_FOLDER']):
         list_files.append(filename)
     args["files"] = list_files
-    return render_template("file_download.html", args=args)
+    return render_template("index.html", args=args)
 
 
 @app.route("/graphic/", methods=["POST", "GET"])
 def construct_graphic():
-    args = {"method": "POST"}
-    if request.method == "POST":
-        filename = request.form['filename']
-        colormap = request.form.get('colormap', 'hot')
-        args["colorlist"] = [{"color": cm, "flag": cm == colormap} for cm in list(COLORMAP.keys())]
-        args["filename"] = filename
-        file = open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'r')
-        table = []
-        for line in file:
+    args = {"method": "GET", "image": "", "image_path": ""}
+    filename = request.args.get('filename')
+    colormap = request.form.get('colormap', 'hot')
+    dpi = request.form.get('dpi', '300 dpi')
+    type_pict = request.form.get('type_pict', '2D')
+    args["colorlist"] = [{"color": cm, "flag": cm == colormap} for cm in list(COLORMAP.keys())]
+    args["type_pict"] = [{"type": tp, "flag": tp == type_pict} for tp in list(PICT_TYPES.keys())]
+    args["resolution"] = [{"type": tp, "flag": tp == dpi} for tp in list(RESOLUTION.keys())]
+
+    args["filename"] = filename
+    file = open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'r')
+    table = []
+    for line in file:
+        try:
             x, y, z = line.split()
             table.append(dict(x=x, y=y, z=z))
-        file.close()
-        table_min = table[:16] if len(table) > 16 else table
-        image_name, image_path = create_3d_graphic(os.path.join(app.config['UPLOAD_FOLDER'], filename),
-                                                   colormap=COLORMAP[colormap])
-        args["method"] = "GET"
-        args["image"] = image_name
-        args["image_path"] = URL_IMAGES
-        args["table"] = table_min
+        except ValueError:
+            x, y = line.split()
+            table.append(dict(x=x, y=y))
+    if len(table[0].keys()) == 2:
+        args["dim_z"] = False
+    else:
+        args["dim_z"] = True
+    file.close()
+    table_min = table[:16] if len(table) > 16 else table
+    args["table"] = table_min
+    if request.method == "POST":
+        if type_pict == "2D":
+            image_name, image_path = create_2d_graphic(os.path.join(app.config['UPLOAD_FOLDER'], filename), dpi)
+        elif type_pict == "3D":
+            image_name, image_path = create_3d_graphic(os.path.join(app.config['UPLOAD_FOLDER'], filename),
+                                                       colormap=COLORMAP[colormap],
+                                                       dpi=dpi)
+        else:
+            # TODO 2d с цветными контурами
+            pass
+        args["method"] = "POST"
+        args["image"] = image_name + ".png"
+        args["links"] = {"eps":  URL_IMAGES + '/eps/' + image_name + '.eps',
+                         "pdf":  URL_IMAGES + '/pdf/' + image_name + '.pdf'}
+        args["image_path"] = URL_IMAGES + '/png/'
 
-    return render_template("graphic_plotter.html", args=args)
+    return render_template("plotter.html", args=args)
 

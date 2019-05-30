@@ -1,0 +1,105 @@
+{% extends "core.html" %}
+
+{% block title %}
+    График
+{% endblock %}
+
+{% block js_scripts %}
+    <script src="{{ url_for('static', filename='js/on_click_eventer.js') }}"></script>
+{% endblock %}
+
+{% block content_body %}
+
+    <div class="row">
+        <h1>Построенный график</h1>
+    </div>
+
+    <div class="row" style="padding-top: 30px; padding-left: 5%; padding-right: 5%">
+    <div class="col-md-4">
+    <h2 align="center">Настройки</h2>
+        <form method="post">
+          <p><b>Цветовая гамма</b></p>
+              {% for cmap in args["colorlist"] %}
+                  <div>
+                    {% if cmap.flag %}
+                        <input type="radio" id="Choice+{{ cmap.color }}"
+                        name="colormap" value="{{ cmap.color }}" checked>
+                    {% else %}
+                        <input type="radio" id="Choice+{{ cmap.color }}"
+                        name="colormap" value="{{ cmap.color }}">
+                    {% endif %}
+                    <label for="Choice+{{ cmap.color }}">{{ cmap.color }}</label><br>
+                  </div>
+              {% endfor %}
+             <p><b>Тип рисунка</b></p>
+            {% for tp in args["type_pict"] %}
+                  <div>
+                    {% if tp.flag %}
+                        <input type="radio" id="tp+{{ tp.type }}"
+                        name="type_pict" value="{{ tp.type }}" checked>
+                    {% else %}
+                        <input type="radio" id="tp+{{ tp.type }}"
+                        name="type_pict" value="{{ tp.type }}">
+                    {% endif %}
+                    <label for="tp+{{ tp.type }}">{{ tp.type }}</label><br>
+                  </div>
+              {% endfor %}
+            <p><b>Точность рисунка</b></p>
+            {% for tp in args["resolution"] %}
+                  <div>
+                    {% if tp.flag %}
+                        <input type="radio" id="res+{{ tp.type }}"
+                        name="dpi" value="{{ tp.type }}" checked>
+                    {% else %}
+                        <input type="radio" id="res+{{ tp.type }}"
+                        name="dpi" value="{{ tp.type }}">
+                    {% endif %}
+                    <label for="res+{{ tp.type }}">{{ tp.type }}</label><br>
+                  </div>
+              {% endfor %}
+          <div>
+                <input type="hidden" name="filename" value="{{ args["filename"] }}"/>
+                <button type="submit" class="btn btn-primary">Нарисовать</button>
+          </div>
+        </form>
+        <br>
+        {% if args["method"] == "POST" %}
+        <h3 align="center">Файлы рисунков</h3>
+        <ul>
+            <li><a href="{{ args["links"].eps }}">Скачать EPS</a></li>
+            <li><a href="{{ args["links"].pdf }}">Скачать PDF</a></li>
+        </ul>
+        {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="row"><img src="{{args["image_path"] + args['image']}}" /></div>
+            <div class="row">
+                <table class="table">
+                <thead>
+                  <tr>
+                      <th>X</th>
+                      <th>Y</th>
+                      {% if args["dim_z"] == True %}
+                      <th>Z</th>
+                      {% endif %}
+                  </tr>
+                </thead>
+                <tbody>
+                {% if not args["table"] == ""%}
+                    {% for item in args["table"][:15] %}
+                        <tr>
+                            <th>{{ item.x }}</th>
+                            <th>{{ item.y }}</th>
+                            {% if args["dim_z"] == True %}
+                            <th>{{ item.z }}</th>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
