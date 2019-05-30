@@ -52,7 +52,7 @@ def create_3d_graphic(filename, colormap=cm.hot, dpi="300 dpi"):
     plt.savefig(image_path_png)
     plt.savefig(image_path_eps, format='eps', dpi=dpi_value)
     plt.savefig(image_path_pdf, format='pdf', dpi=dpi_value)
-
+    plt.clf()
     return file_id, image_path_png
 
 
@@ -77,5 +77,6 @@ def create_2d_graphic(filename, dpi="300 dpi"):
     plt.savefig(image_path_png)
     plt.savefig(image_path_eps, format='eps', dpi=dpi_value)
     plt.savefig(image_path_pdf, format='pdf', dpi=dpi_value)
+    plt.clf()
 
     return file_id, image_path_png
