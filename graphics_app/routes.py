@@ -6,7 +6,10 @@ from flask import render_template
 from flask import request
 from werkzeug.utils import secure_filename
 import os
-from graphics_app.graphics import create_3d_graphic, COLORMAP, PICT_TYPES, create_2d_graphic, RESOLUTION
+from graphics_app.graphics import (
+    create_3d_graphic, COLORMAP, PICT_TYPES, create_2d_graphic, RESOLUTION,
+    create_2d_contour
+)
 
 
 @app.route("/", methods=["POST", "GET"])
@@ -71,7 +74,9 @@ def construct_graphic():
             image_name, image_path = create_3d_graphic(os.path.join(app.config['UPLOAD_FOLDER'], filename),
                                                        colormap=COLORMAP[colormap],
                                                        dpi=dpi)
-        else:
+        elif type_pict == "2D with colors":
+            image_name, image_path = create_2d_contour(os.path.join(app.config['UPLOAD_FOLDER'], filename), dpi)
+
             # TODO 2d с цветными контурами
             pass
         args["method"] = "POST"

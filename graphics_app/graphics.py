@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from matplotlib import cm
+from scipy import interpolate
 import sys
 import os
 import uuid
@@ -79,4 +80,26 @@ def create_2d_graphic(filename, dpi="300 dpi"):
     plt.savefig(image_path_pdf, format='pdf', dpi=dpi_value)
     plt.clf()
 
+    return file_id, image_path_png
+
+def create_2d_contour(filename, dpi="300 dpi"):
+    dpi_value = RESOLUTION[dpi]
+    x, y, z = np.genfromtxt(filename, unpack=True)
+    N = 100
+    xi = np.linspace(x.min(), x.max(), N)
+    yi = np.linspace(y.min(), y.max(), N)
+    zi = interpolate.griddata((x, y), z, (xi[None, :], yi[:, None]), method='cubic')
+
+    fig = plt.figure()
+    plt.contour(xi, yi, zi)
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    file_id = str(uuid.uuid4())
+    image_path_png = os.path.join(IMAGES_FOLDER, 'png', '{}.png'.format(file_id))
+    image_path_pdf = os.path.join(IMAGES_FOLDER, 'pdf', '{}.pdf'.format(file_id))
+    image_path_eps = os.path.join(IMAGES_FOLDER, 'eps', '{}.eps'.format(file_id))
+    plt.savefig(image_path_png)
+    plt.savefig(image_path_eps, format='eps', dpi=dpi_value)
+    plt.savefig(image_path_pdf, format='pdf', dpi=dpi_value)
+    plt.clf()
     return file_id, image_path_png
