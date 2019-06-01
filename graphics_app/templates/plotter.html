@@ -37,15 +37,14 @@
                   <div>
                     {% if cm2d.flag %}
                         <input type="radio" id="c2+{{ cm2d.type }}"
-                        name="type_pict" value="{{ cm2d.type }}" checked>
+                        name="color2d" value="{{ cm2d.type }}" checked>
                     {% else %}
                         <input type="radio" id="c2+{{ cm2d.type }}"
-                        name="type_pict" value="{{ cm2d.type }}">
+                        name="color2d" value="{{ cm2d.type }}">
                     {% endif %}
                     <label for="c2+{{ cm2d.type }}">{{ cm2d.type }}</label><br>
                   </div>
             {% endfor %}
-
             <p><b>Тип рисунка</b></p>
             {% for tp in args["type_pict"] %}
                   <div>
@@ -72,6 +71,7 @@
                     <label for="res+{{ tp.type }}">{{ tp.type }}</label><br>
                   </div>
             {% endfor %}
+            <p><b><input type="checkbox" name="grid2d"> разметка</b></p>
           <div>
                 <input type="hidden" name="filename" value="{{ args["filename"] }}"/>
                 <button type="submit" class="btn btn-primary">Нарисовать</button>
