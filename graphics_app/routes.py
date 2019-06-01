@@ -7,7 +7,7 @@ from flask import request
 from werkzeug.utils import secure_filename
 import os
 from graphics_app.graphics import (
-    create_3d_graphic, COLORMAP, PICT_TYPES, create_2d_graphic, RESOLUTION,
+    create_3d_graphic, COLORMAP, COLORM2D, PICT_TYPES, create_2d_graphic, RESOLUTION,
     create_2d_contour
 )
 
@@ -44,9 +44,11 @@ def construct_graphic():
     args = {"method": "GET", "image": "", "image_path": ""}
     filename = request.args.get('filename')
     colormap = request.form.get('colormap', 'hot')
+    color2d = request.form.get('color2d', 'b')
     dpi = request.form.get('dpi', '300 dpi')
     type_pict = request.form.get('type_pict', '2D')
     args["colorlist"] = [{"color": cm, "flag": cm == colormap} for cm in list(COLORMAP.keys())]
+    args["color2d"] = [{"type": cm2d, "flag": cm2d == color2d} for cm2d in list(COLORM2D.keys())]
     args["type_pict"] = [{"type": tp, "flag": tp == type_pict} for tp in list(PICT_TYPES.keys())]
     args["resolution"] = [{"type": tp, "flag": tp == dpi} for tp in list(RESOLUTION.keys())]
 

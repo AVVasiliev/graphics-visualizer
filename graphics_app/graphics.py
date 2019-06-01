@@ -14,10 +14,26 @@ COLORMAP = {
     "rainbow": cm.rainbow
 }
 
+COLORM2D = {
+    "blue":     "b",
+    "green":    "g",
+    "red":      "r",
+    "cyan":     "c",
+    "magenta":  "m",
+    "yellow":   "y",
+    "black":    "k",
+    "white":    "w"
+}
+
 PICT_TYPES = {
     "2D": "2D",
     "3D": "3D",
     "2D with colors": "2D with colors"
+}
+
+GRID2D = {
+    "Yes":  True,
+    "No":   False
 }
 
 RESOLUTION = {
@@ -57,7 +73,7 @@ def create_3d_graphic(filename, colormap=cm.hot, dpi="300 dpi"):
     return file_id, image_path_png
 
 
-def create_2d_graphic(filename, dpi="300 dpi"):
+def create_2d_graphic(filename, dpi="300 dpi", color2d="b", grid2d="No"):
     dpi_value = RESOLUTION[dpi]
     file = open(filename, 'r')
     x = list()
@@ -70,7 +86,8 @@ def create_2d_graphic(filename, dpi="300 dpi"):
         n = n + 1
     x = np.array(x)
     y = np.array(y)
-    plt.plot(x, y)
+    plt.plot(x, y, color2d)
+    plt.grid(GRID2D[grid2d])
     file_id = str(uuid.uuid4())
     image_path_png = os.path.join(IMAGES_FOLDER, 'png', '{}.png'.format(file_id))
     image_path_pdf = os.path.join(IMAGES_FOLDER, 'pdf', '{}.pdf'.format(file_id))
