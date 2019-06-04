@@ -9,9 +9,13 @@ import uuid
 from graphics_app import IMAGES_FOLDER
 
 COLORMAP = {
-    "hot": cm.hot,
-    "inferno": cm.inferno,
-    "rainbow": cm.rainbow
+    "hot":      cm.hot,
+    "inferno":  cm.inferno,
+    "rainbow":  cm.rainbow,
+    "viridis":  cm.viridis,
+    "plasma":   cm.plasma,
+    "magma":    cm.magma,
+    "cividis":  cm.cividis
 }
 
 COLORM2D = {
