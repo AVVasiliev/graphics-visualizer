@@ -71,7 +71,11 @@
                     <label for="res+{{ tp.type }}">{{ tp.type }}</label><br>
                   </div>
             {% endfor %}
-            <p><b><input type="checkbox" name="grid2d"> разметка</b></p>
+            {% if args["grid2d"] %}
+                <p><b><input type="checkbox" name="grid2d"checked> разметка</b></p>
+            {% else %}
+                <p><b><input type="checkbox" name="grid2d"> разметка</b></p>
+            {% endif %}
           <div>
                 <input type="hidden" name="filename" value="{{ args["filename"] }}"/>
                 <button type="submit" class="btn btn-primary">Нарисовать</button>

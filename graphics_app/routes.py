@@ -46,7 +46,7 @@ def construct_graphic():
     colormap = request.form.get('colormap', 'hot')
     color2d = request.form.get('color2d', 'blue')
     dpi = request.form.get('dpi', '300 dpi')
-    grid = request.form.get('grid2d', False)
+    grid = request.form.get('grid2d')
     type_pict = request.form.get('type_pict', '2D')
     args["colorlist"] = [{"color": cm, "flag": cm == colormap} for cm in list(COLORMAP.keys())]
     args["color2d"] = [{"type": cm2d, "flag": cm2d == color2d} for cm2d in list(COLORM2D.keys())]
