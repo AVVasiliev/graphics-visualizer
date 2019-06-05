@@ -7,6 +7,7 @@ import sys
 import os
 import uuid
 from graphics_app import IMAGES_FOLDER
+from graphics_app.utils import transpose
 
 COLORMAP = {
     "hot":      cm.hot,
@@ -41,7 +42,12 @@ RESOLUTION = {
     "1200 dpi": 1200
 }
 
-COLUMN_NAMES = ['x', 'y', *[f'f{i}' for i in range(1, 20)]]
+COLUMN_NAMES = [
+    {'name': 'x', 'checked': True},
+    {'name': 'y', 'checked': True}
+]
+for i in range(1, 20):
+    COLUMN_NAMES.append({'name': f"f{i}", 'checked': False})
 
 
 def create_3d_graphic(filename, colormap=cm.hot, dpi="300 dpi"):
@@ -74,20 +80,14 @@ def create_3d_graphic(filename, colormap=cm.hot, dpi="300 dpi"):
     return file_id, image_path_png
 
 
-def create_2d_graphic(filename, dpi="300 dpi", color2d="b", grid2d=False):
+def create_2d_graphic(data,  active_column, dpi="300 dpi", color2d="b", grid2d=False):
     dpi_value = RESOLUTION[dpi]
-    file = open(filename, 'r')
-    x = list()
-    y = list()
-    n = 0
-    for line in file:
-        xx, yy = line.split()
-        x.append(float(xx))
-        y.append(float(yy))
-        n = n + 1
-    x = np.array(x)
-    y = np.array(y)
-    plt.plot(x, y, color=color2d)
+    data_transpose = transpose(data)
+    print(data_transpose)
+    x = data_transpose[0]
+    for i in range(1, len(data_transpose)):
+        if active_column[i]['checked']:
+            plt.plot(x, data_transpose[i], color=color2d)
     plt.grid(grid2d)
     file_id = str(uuid.uuid4())
     image_path_png = os.path.join(IMAGES_FOLDER, 'png', '{}.png'.format(file_id))
