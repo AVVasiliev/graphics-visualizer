@@ -83,7 +83,6 @@ def create_3d_graphic(filename, colormap=cm.hot, dpi="300 dpi"):
 def create_2d_graphic(data,  active_column, dpi="300 dpi", color2d="b", grid2d=False):
     dpi_value = RESOLUTION[dpi]
     data_transpose = transpose(data)
-    print(data_transpose)
     x = data_transpose[0]
     for i in range(1, len(data_transpose)):
         if active_column[i]['checked']:
