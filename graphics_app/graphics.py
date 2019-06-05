@@ -41,6 +41,8 @@ RESOLUTION = {
     "1200 dpi": 1200
 }
 
+COLUMN_NAMES = ['x', 'y', *[f'f{i}' for i in range(1, 20)]]
+
 
 def create_3d_graphic(filename, colormap=cm.hot, dpi="300 dpi"):
     dpi_value = RESOLUTION[dpi]
@@ -97,6 +99,7 @@ def create_2d_graphic(filename, dpi="300 dpi", color2d="b", grid2d=False):
     plt.clf()
 
     return file_id, image_path_png
+
 
 def create_2d_contour(filename, dpi="300 dpi"):
     dpi_value = RESOLUTION[dpi]
