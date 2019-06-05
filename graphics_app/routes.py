@@ -6,9 +6,10 @@ from flask import render_template
 from flask import request
 from werkzeug.utils import secure_filename
 import os
+from graphics_app.file_reader import FileReader
 from graphics_app.graphics import (
     create_3d_graphic, COLORMAP, COLORM2D, PICT_TYPES, create_2d_graphic, RESOLUTION,
-    create_2d_contour
+    create_2d_contour, COLUMN_NAMES
 )
 
 
@@ -55,22 +56,15 @@ def construct_graphic():
 
     args["grid2d"] = grid
     args["filename"] = filename
-    file = open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'r')
-    table = []
-    for line in file:
-        try:
-            x, y, z = line.split()
-            table.append(dict(x=x, y=y, z=z))
-        except ValueError:
-            x, y = line.split()
-            table.append(dict(x=x, y=y))
-    if len(table[0].keys()) == 2:
-        args["dim_z"] = False
-    else:
-        args["dim_z"] = True
-    file.close()
-    table_min = table[:16] if len(table) > 16 else table
-    args["table"] = table_min
+
+    file_reader = FileReader(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    file_reader.open()
+    column_caption = COLUMN_NAMES[:file_reader.column_count()]
+    file_reader.set_table()
+    data_table = file_reader.get_table()
+    args["captions"] = column_caption
+    args["table"] = data_table[:16]
+    file_reader.close()
     if request.method == "POST":
         if type_pict == "2D":
             image_name, image_path = create_2d_graphic(os.path.join(app.config['UPLOAD_FOLDER'], filename),

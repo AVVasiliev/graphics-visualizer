@@ -96,22 +96,22 @@
                 <table class="table">
                 <thead>
                   <tr>
-                      <th>X</th>
-                      <th>Y</th>
-                      {% if args["dim_z"] == True %}
-                      <th>Z</th>
-                      {% endif %}
+                      {% for el in args['captions'] %}
+                      <th>
+                          {{ el }}
+                      </th>
+                      {% endfor %}
                   </tr>
                 </thead>
                 <tbody>
                 {% if not args["table"] == ""%}
-                    {% for item in args["table"][:15] %}
+                    {% for item in args["table"] %}
                         <tr>
-                            <th>{{ item.x }}</th>
-                            <th>{{ item.y }}</th>
-                            {% if args["dim_z"] == True %}
-                            <th>{{ item.z }}</th>
-                            {% endif %}
+                           {% for el in item %}
+                          <th>
+                              {{ el }}
+                          </th>
+                          {% endfor %}
                         </tr>
                     {% endfor %}
                 {% endif %}
