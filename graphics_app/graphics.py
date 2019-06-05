@@ -9,9 +9,24 @@ import uuid
 from graphics_app import IMAGES_FOLDER
 
 COLORMAP = {
-    "hot": cm.hot,
-    "inferno": cm.inferno,
-    "rainbow": cm.rainbow
+    "hot":      cm.hot,
+    "inferno":  cm.inferno,
+    "rainbow":  cm.rainbow,
+    "viridis":  cm.viridis,
+    "plasma":   cm.plasma,
+    "magma":    cm.magma,
+    "cividis":  cm.cividis
+}
+
+COLORM2D = {
+    "blue":     "b",
+    "green":    "g",
+    "red":      "r",
+    "cyan":     "c",
+    "magenta":  "m",
+    "yellow":   "y",
+    "black":    "k",
+    "white":    "w"
 }
 
 PICT_TYPES = {
@@ -57,7 +72,7 @@ def create_3d_graphic(filename, colormap=cm.hot, dpi="300 dpi"):
     return file_id, image_path_png
 
 
-def create_2d_graphic(filename, dpi="300 dpi"):
+def create_2d_graphic(filename, dpi="300 dpi", color2d="b", grid2d=False):
     dpi_value = RESOLUTION[dpi]
     file = open(filename, 'r')
     x = list()
@@ -70,7 +85,8 @@ def create_2d_graphic(filename, dpi="300 dpi"):
         n = n + 1
     x = np.array(x)
     y = np.array(y)
-    plt.plot(x, y)
+    plt.plot(x, y, color=color2d)
+    plt.grid(grid2d)
     file_id = str(uuid.uuid4())
     image_path_png = os.path.join(IMAGES_FOLDER, 'png', '{}.png'.format(file_id))
     image_path_pdf = os.path.join(IMAGES_FOLDER, 'pdf', '{}.pdf'.format(file_id))
