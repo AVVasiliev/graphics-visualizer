@@ -83,9 +83,6 @@ def construct_graphic():
                                                        dpi=dpi)
         elif type_pict == "2D with colors":
             image_name, image_path = create_2d_contour(os.path.join(app.config['UPLOAD_FOLDER'], filename), dpi)
-
-            # TODO 2d с цветными контурами
-            pass
         args["method"] = "POST"
         args["image"] = image_name + ".png"
         args["links"] = {"eps":  URL_IMAGES + '/eps/' + image_name + '.eps',
