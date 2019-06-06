@@ -17,7 +17,7 @@
     <div class="row" style="padding-top: 30px; padding-left: 5%; padding-right: 5%">
     <div class="col-md-4">
     <h2 align="center">Настройки</h2>
-        <form method="post">
+        <form method="post" id="settings_form">
             <p><b>Цветовая гамма</b></p>
             {% for cmap in args["colorlist"] %}
                   <div>
@@ -80,6 +80,7 @@
                 <input type="hidden" name="filename" value="{{ args["filename"] }}"/>
                 <button type="submit" class="btn btn-primary">Нарисовать</button>
           </div>
+
         </form>
         <br>
         {% if args["method"] == "POST" %}
@@ -96,22 +97,26 @@
                 <table class="table">
                 <thead>
                   <tr>
-                      <th>X</th>
-                      <th>Y</th>
-                      {% if args["dim_z"] == True %}
-                      <th>Z</th>
-                      {% endif %}
+                      {% for el in args['captions'] %}
+                      <th>
+                        {% if el.checked %}
+                            <input type="checkbox" name="axe_{{ el.name }}" checked form="settings_form" value="True">{{ el.name }}
+                        {% else %}
+                            <input type="checkbox" name="axe_{{ el.name }}" form="settings_form" value="False">{{ el.name }}
+                        {% endif %}
+                      </th>
+                      {% endfor %}
                   </tr>
                 </thead>
                 <tbody>
                 {% if not args["table"] == ""%}
-                    {% for item in args["table"][:15] %}
+                    {% for item in args["table"] %}
                         <tr>
-                            <th>{{ item.x }}</th>
-                            <th>{{ item.y }}</th>
-                            {% if args["dim_z"] == True %}
-                            <th>{{ item.z }}</th>
-                            {% endif %}
+                           {% for el in item %}
+                          <th>
+                              {{ el }}
+                          </th>
+                          {% endfor %}
                         </tr>
                     {% endfor %}
                 {% endif %}
