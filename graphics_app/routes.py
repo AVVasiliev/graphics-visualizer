@@ -7,7 +7,7 @@ from flask import request
 from werkzeug.utils import secure_filename
 import os
 from graphics_app.graphics import (
-    create_3d_graphic, COLORMAP, COLORM2D, PICT_TYPES, create_2d_graphic, RESOLUTION,
+    create_3d_graphic, COLORMAP, COLORM2D, PICT_TYPES, create_2d_graphic, create_2x2d_graphic, RESOLUTION,
     create_2d_contour
 )
 
@@ -69,7 +69,7 @@ def construct_graphic():
     else:
         args["dim_z"] = True
     file.close()
-    table_min = table[:16] if len(table) > 16 else table
+    table_min = table[:20] if len(table) > 20 else table
     args["table"] = table_min
     if request.method == "POST":
         if type_pict == "2D":
@@ -83,7 +83,11 @@ def construct_graphic():
                                                        dpi=dpi)
         elif type_pict == "2D with colors":
             image_name, image_path = create_2d_contour(os.path.join(app.config['UPLOAD_FOLDER'], filename), dpi)
-
+        if type_pict == "3D to 2x2D":
+            image_name, image_path = create_2x2d_graphic(os.path.join(app.config['UPLOAD_FOLDER'], filename),
+                                                        dpi=dpi,
+                                                        color2d=COLORM2D[color2d],
+                                                        grid2d=grid)
             # TODO 2d с цветными контурами
             pass
         args["method"] = "POST"
