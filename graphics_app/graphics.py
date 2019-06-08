@@ -3,11 +3,9 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from matplotlib import cm
 from scipy import interpolate
-import sys
 import os
 import uuid
 from graphics_app import IMAGES_FOLDER
-from graphics_app.utils import transpose
 
 COLORMAP = {
     "hot":      cm.hot,
@@ -17,17 +15,6 @@ COLORMAP = {
     "plasma":   cm.plasma,
     "magma":    cm.magma,
     "cividis":  cm.cividis
-}
-
-COLORM2D = {
-    "blue":     "b",
-    "green":    "g",
-    "red":      "r",
-    "cyan":     "c",
-    "magenta":  "m",
-    "yellow":   "y",
-    "black":    "k",
-    "white":    "w"
 }
 
 PICT_TYPES = {
@@ -50,22 +37,12 @@ for i in range(1, 20):
     COLUMN_NAMES.append({'name': f"f{i}", 'checked': False})
 
 
-def create_3d_graphic(filename, colormap=cm.hot, dpi="300 dpi"):
+def create_3d_graphic(data, colormap=cm.hot, dpi="300 dpi"):
     dpi_value = RESOLUTION[dpi]
-    file = open(filename, 'r')
-    x = list()
-    y = list()
-    z = list()
-    n = 0
-    for line in file:
-        xx, yy, zz = line.split()
-        x.append(float(xx))
-        y.append(float(yy))
-        z.append(float(zz))
-        n = n+1
-    x = np.array(x)
-    y = np.array(y)
-    z = np.array(z)
+    data_transpose = np.transpose(data)
+    x = data_transpose[0]
+    y = data_transpose[1]
+    z = data_transpose[2]
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     ax.plot_trisurf(x, y, z, cmap=colormap)
@@ -80,13 +57,13 @@ def create_3d_graphic(filename, colormap=cm.hot, dpi="300 dpi"):
     return file_id, image_path_png
 
 
-def create_2d_graphic(data,  active_column, dpi="300 dpi", color2d="b", grid2d=False):
+def create_2d_graphic(data,  active_column, dpi="300 dpi", grid2d=False):
     dpi_value = RESOLUTION[dpi]
-    data_transpose = transpose(data)
+    data_transpose = np.transpose(data)
     x = data_transpose[0]
     for i in range(1, len(data_transpose)):
         if active_column[i]['checked']:
-            plt.plot(x, data_transpose[i], color=color2d)
+            plt.plot(x, data_transpose[i])
     plt.grid(grid2d)
     file_id = str(uuid.uuid4())
     image_path_png = os.path.join(IMAGES_FOLDER, 'png', '{}.png'.format(file_id))
@@ -100,15 +77,18 @@ def create_2d_graphic(data,  active_column, dpi="300 dpi", color2d="b", grid2d=F
     return file_id, image_path_png
 
 
-def create_2d_contour(filename, dpi="300 dpi"):
+def create_2d_contour(data, dpi="300 dpi"):
     dpi_value = RESOLUTION[dpi]
-    x, y, z = np.genfromtxt(filename, unpack=True)
+    data_transpose = np.transpose(data)
+    x = data_transpose[0]
+    y = data_transpose[1]
+    z = data_transpose[2]
     N = 100
     xi = np.linspace(x.min(), x.max(), N)
     yi = np.linspace(y.min(), y.max(), N)
     zi = interpolate.griddata((x, y), z, (xi[None, :], yi[:, None]), method='cubic')
 
-    fig = plt.figure()
+    plt.figure()
     plt.contour(xi, yi, zi)
     plt.xlabel("X")
     plt.ylabel("Y")

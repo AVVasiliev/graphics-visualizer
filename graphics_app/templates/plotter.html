@@ -32,19 +32,6 @@
                   </div>
             {% endfor %}
 
-            <p><b>Цвет 2-мерного рисунка</b></p>
-            {% for cm2d in args["color2d"] %}
-                  <div>
-                    {% if cm2d.flag %}
-                        <input type="radio" id="c2+{{ cm2d.type }}"
-                        name="color2d" value="{{ cm2d.type }}" checked>
-                    {% else %}
-                        <input type="radio" id="c2+{{ cm2d.type }}"
-                        name="color2d" value="{{ cm2d.type }}">
-                    {% endif %}
-                    <label for="c2+{{ cm2d.type }}">{{ cm2d.type }}</label><br>
-                  </div>
-            {% endfor %}
             <p><b>Тип рисунка</b></p>
             {% for tp in args["type_pict"] %}
                   <div>
