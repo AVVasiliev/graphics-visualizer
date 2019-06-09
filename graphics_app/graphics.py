@@ -30,8 +30,7 @@ RESOLUTION = {
 }
 
 COLUMN_NAMES = [
-    {'name': 'x', 'checked': True},
-    {'name': 'y', 'checked': True}
+    {'name': 'x', 'checked': True}
 ]
 for i in range(1, 20):
     COLUMN_NAMES.append({'name': f"f{i}", 'checked': False})
@@ -63,7 +62,8 @@ def create_2d_graphic(data,  active_column, dpi="300 dpi", grid2d=False):
     x = data_transpose[0]
     for i in range(1, len(data_transpose)):
         if active_column[i]['checked']:
-            plt.plot(x, data_transpose[i])
+            plt.plot(x, data_transpose[i], label='f'+str(i))
+    plt.legend()
     plt.grid(grid2d)
     file_id = str(uuid.uuid4())
     image_path_png = os.path.join(IMAGES_FOLDER, 'png', '{}.png'.format(file_id))
